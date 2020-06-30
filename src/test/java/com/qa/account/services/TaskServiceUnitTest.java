@@ -1,7 +1,12 @@
 package com.qa.account.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.times;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -11,7 +16,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.modelmapper.ModelMapper;
 
+import com.qa.account.dto.TaskDTO;
 import com.qa.account.persistence.domain.Task;
 import com.qa.account.persistence.repo.TaskRepo;
 import com.qa.account.service.TaskService;
@@ -19,12 +26,21 @@ import com.qa.account.service.TaskService;
 @RunWith(MockitoJUnitRunner.class) // this class will only run with mockito library, not the whole spring app
 public class TaskServiceUnitTest {
 
-	private final Task TASK = new Task("eat cake", "kitchen");
+	private final Task TASK = new Task(LocalDate.of(2020, 9, 30), LocalTime.of(19, 30),"eat cake", "kitchen");
 
 	private Task savedTask;
 
 	@Mock
 	private TaskRepo repo;
+	
+	@Mock
+	private ModelMapper mapper;
+	
+	private List<Task> taskList;
+	
+	private Task testTaskWithID;
+	
+	private TaskDTO taskDTO;
 
 	@InjectMocks // (= new TaskService(repo))
 	private TaskService service;
@@ -35,7 +51,7 @@ public class TaskServiceUnitTest {
 
 	@Before
 	public void init() {
-		this.savedTask = new Task(TASK.getTaskName(), TASK.getTaskLocation());
+		this.savedTask = new Task(TASK.getTaskDate(), TASK.getTaskTime(), TASK.getTaskName(), TASK.getTaskLocation());
 		this.savedTask.setTaskId(1L);
 	}
 
@@ -48,15 +64,18 @@ public class TaskServiceUnitTest {
 
 	@Test
 	public void testRead() {
-		
+		Mockito.when(repo.findAll()).thenReturn(this.taskList);
+		Mockito.when(this.mapper.map(testTaskWithID, TaskDTO.class)).thenReturn(taskDTO);
+		assertFalse("No tasks here", this.service.read().isEmpty());
+		Mockito.verify(repo, times(1)).findAll();
 	}
 
 	@Test
 	public void testUpdate() {
 		Mockito.when(this.repo.findById(savedTask.getTaskId())).thenReturn(Optional.of(savedTask));
 
-		Task newTask = new Task("swim", "pool"); // Task task
-		Task newTaskWithId = new Task("swim", "pool"); // =toUpdate
+		Task newTask = new Task(LocalDate.of(2020, 7, 1), LocalTime.of(12, 00), "swim", "pool"); // Task task
+		Task newTaskWithId = new Task(LocalDate.of(2020, 7, 1), LocalTime.of(12, 00), "swim", "pool"); // =toUpdate
 		newTaskWithId.setTaskId(savedTask.getTaskId());
 		
 		Mockito.when(this.repo.save(newTaskWithId)).thenReturn(newTaskWithId);

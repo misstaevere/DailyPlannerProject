@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qa.account.dto.TaskDTO;
 import com.qa.account.persistence.domain.Task;
 import com.qa.account.service.TaskService;
 
@@ -33,14 +34,18 @@ public class TaskController {
 	}
 
 	@PostMapping("/create")
-	public ResponseEntity<Task> create(@RequestBody Task task) { // @RB will send a json Task in with(time,date,name...)
-																	// and create a task obj
-		return new ResponseEntity<Task>(this.service.create(task), HttpStatus.CREATED);
+	public ResponseEntity<TaskDTO> create(@RequestBody Task task) { // @RB will send a json Task in with(time,date,name...) and create a task obj
+		return new ResponseEntity<TaskDTO>(this.service.create(task), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/read")
-	public ResponseEntity<List<Task>> read() {
-		return new ResponseEntity<List<Task>>(this.service.read(), HttpStatus.OK);
+	public ResponseEntity<List<TaskDTO>> read() {
+		return new ResponseEntity<List<TaskDTO>>(this.service.read(), HttpStatus.OK);
+	}
+
+	@GetMapping("/read/{taskId}")
+	public ResponseEntity<Task> readOne(@PathVariable Long taskId) {
+		return ResponseEntity.ok(this.service.read(taskId));
 	}
 
 	@PutMapping("/update/{taskId}")
@@ -56,5 +61,4 @@ public class TaskController {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 	}
-
 }
