@@ -1,7 +1,7 @@
 package com.qa.account.persistence.domain;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,9 +17,9 @@ public class Task {
 	@GeneratedValue
 	private long taskId;
 
-	private Date taskDate;
+	private LocalDate taskDate;
 
-	private Time taskTime;
+	private LocalTime taskTime;
 
 	@Column(nullable = false)
 	private String taskName;
@@ -30,16 +30,10 @@ public class Task {
 	@ManyToOne(targetEntity = User.class)
 	private User user;
 
-	public Task(Date taskDate, Time taskTime, String taskName, String taskLocation) {
+	public Task(LocalDate taskDate, LocalTime taskTime, String taskName, String taskLocation) {
 		super();
 		this.taskDate = taskDate;
 		this.taskTime = taskTime;
-		this.taskName = taskName;
-		this.taskLocation = taskLocation;
-	}
-
-	public Task(String taskName, String taskLocation) {
-		super();
 		this.taskName = taskName;
 		this.taskLocation = taskLocation;
 	}
@@ -108,19 +102,19 @@ public class Task {
 		this.taskId = taskId;
 	}
 
-	public Date getTaskDate() {
+	public LocalDate getTaskDate() {
 		return taskDate;
 	}
 
-	public void setTaskDate(Date taskDate) {
+	public void setTaskDate(LocalDate taskDate) {
 		this.taskDate = taskDate;
 	}
 
-	public Time getTaskTime() {
+	public LocalTime getTaskTime() {
 		return taskTime;
 	}
 
-	public void setTaskTime(Time taskTime) {
+	public void setTaskTime(LocalTime taskTime) {
 		this.taskTime = taskTime;
 	}
 

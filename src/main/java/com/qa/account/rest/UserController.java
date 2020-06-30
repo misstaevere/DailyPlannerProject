@@ -42,6 +42,11 @@ public class UserController {
 	public ResponseEntity<List<User>> read() {
 		return new ResponseEntity<List<User>>(this.service.read(), HttpStatus.OK);
 	}
+	
+	@GetMapping("/read/{userId}")
+	public ResponseEntity<User> readOne(@PathVariable Long userId) {
+		return ResponseEntity.ok(this.service.read(userId));
+	}
 
 	@PutMapping("/update/{userId}")
 	public ResponseEntity<User> update(@PathVariable Long userId, @RequestBody User user) {
