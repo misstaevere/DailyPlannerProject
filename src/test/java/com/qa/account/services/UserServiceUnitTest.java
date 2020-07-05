@@ -9,7 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.modelmapper.ModelMapper;
 
+import com.qa.account.dto.UserDTO;
 import com.qa.account.persistence.domain.User;
 import com.qa.account.persistence.repo.UserRepo;
 import com.qa.account.service.UserService;
@@ -17,30 +19,36 @@ import com.qa.account.service.UserService;
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceUnitTest {
 
-	private final User USER = new User("Tommy", "qwerty");
-
-	private User savedUser;
+	@InjectMocks // (= new TaskService(repo))
+	private UserService service;
 
 	@Mock
 	private UserRepo repo;
 
-	@InjectMocks // (= new UserService(repo))
-	private UserService service;
-	
+	@Mock
+	private ModelMapper mapper;
+
 	final long USER_ID = 1L;
-	
-	final boolean RESULT = false;
+
+	private UserDTO userDTO;
+
+	private User testUserWithID;
+
+	private User savedUser;
 
 	@Before
 	public void init() {
-		this.savedUser = new User(USER.getUsername(), USER.getPassword());
-		this.savedUser.setUserId(1L);
+		this.savedUser = new User("Tommy", "qwerty");
+		this.testUserWithID = new User(savedUser.getUsername(), savedUser.getPassword());
+		this.testUserWithID.setUserId(USER_ID);
+		this.userDTO = new ModelMapper().map(testUserWithID, UserDTO.class);
 	}
 
 	@Test
 	public void testCreate() {
-		Mockito.when(this.repo.save(USER)).thenReturn(savedUser);
-		assertEquals(savedUser, service.create(USER));
-		Mockito.verify(this.repo, Mockito.times(1)).save(USER);
+		Mockito.when(this.repo.save(savedUser)).thenReturn(testUserWithID);
+		Mockito.when(this.mapper.map(testUserWithID, UserDTO.class)).thenReturn(userDTO);
+		assertEquals(this.userDTO, this.service.create(savedUser));
+		Mockito.verify(this.repo, Mockito.times(1)).save(this.savedUser);
 	}
 }

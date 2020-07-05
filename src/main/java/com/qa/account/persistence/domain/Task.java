@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 // ORM - obj relational mapper - converts java obj into tables (Jpa - java persistence API) uses constr to create the objects and then getters and setters to stick the values in
 @Entity
@@ -17,8 +18,10 @@ public class Task {
 	@GeneratedValue
 	private long taskId;
 
+	@NotNull
 	private LocalDate taskDate;
 
+	@NotNull
 	private LocalTime taskTime;
 
 	@Column(nullable = false)
@@ -39,20 +42,6 @@ public class Task {
 	}
 
 	public Task() { // entities must have a default constructor
-		super();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((taskDate == null) ? 0 : taskDate.hashCode());
-		result = prime * result + (int) (taskId ^ (taskId >>> 32));
-		result = prime * result + ((taskLocation == null) ? 0 : taskLocation.hashCode());
-		result = prime * result + ((taskName == null) ? 0 : taskName.hashCode());
-		result = prime * result + ((taskTime == null) ? 0 : taskTime.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		return result;
 	}
 
 	@Override

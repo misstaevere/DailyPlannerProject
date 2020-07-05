@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qa.account.dto.UserDTO;
 import com.qa.account.persistence.domain.User;
 import com.qa.account.service.UserService;
 
@@ -27,8 +28,9 @@ public class UserController {
 	}
 
 	@PostMapping("/create")
-	public ResponseEntity<User> create(@RequestBody User user) { // @RB will send a json Task in with(time,date,name...)
+	public ResponseEntity<UserDTO> create(@RequestBody User user) { // @RB will send a json Task in
+																	// with(time,date,name...)
 																	// and create a task obj
-		return new ResponseEntity<User>(this.service.create(user), HttpStatus.CREATED);
+		return new ResponseEntity<UserDTO>(this.service.create(user), HttpStatus.CREATED);
 	}
 }

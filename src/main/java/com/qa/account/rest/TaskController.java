@@ -34,7 +34,8 @@ public class TaskController {
 	}
 
 	@PostMapping("/create")
-	public ResponseEntity<TaskDTO> create(@RequestBody Task task) { // @RB will send a json Task in with(time,date,name...) and create a task obj
+	public ResponseEntity<TaskDTO> create(@RequestBody Task task) { // @RB will send a json Task in
+																	// with(time,date,name...) and create a task obj
 		return new ResponseEntity<TaskDTO>(this.service.create(task), HttpStatus.CREATED);
 	}
 
@@ -44,13 +45,16 @@ public class TaskController {
 	}
 
 	@GetMapping("/read/{taskId}")
-	public ResponseEntity<Task> readOne(@PathVariable Long taskId) {
-		return ResponseEntity.ok(this.service.read(taskId));
+	public ResponseEntity<TaskDTO> readOne(@PathVariable Long taskId) {
+		return ResponseEntity.ok(this.service.readId(taskId));
 	}
+//	public ResponseEntity<Task> readOne(@PathVariable Long taskId) {
+//		return ResponseEntity.ok(this.service.readId(taskId));
+//	}
 
 	@PutMapping("/update/{taskId}")
-	public ResponseEntity<Task> update(@PathVariable Long taskId, @RequestBody Task task) {
-		return new ResponseEntity<Task>(this.service.update(task, taskId), HttpStatus.ACCEPTED);
+	public ResponseEntity<TaskDTO> update(@PathVariable Long taskId, @RequestBody Task task) {
+		return new ResponseEntity<TaskDTO>(HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/delete/{taskId}")
