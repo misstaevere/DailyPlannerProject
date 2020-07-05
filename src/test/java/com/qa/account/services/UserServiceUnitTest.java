@@ -2,8 +2,6 @@ package com.qa.account.services;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Optional;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,37 +42,5 @@ public class UserServiceUnitTest {
 		Mockito.when(this.repo.save(USER)).thenReturn(savedUser);
 		assertEquals(savedUser, service.create(USER));
 		Mockito.verify(this.repo, Mockito.times(1)).save(USER);
-	}
-
-	@Test
-	public void testRead() {
-		
-	}
-
-	@Test
-	public void testUpdate() {
-		Mockito.when(this.repo.findById(savedUser.getUserId())).thenReturn(Optional.of(savedUser));
-
-		User newUser = new User("Lola", "000000"); // Task task
-		User newUserWithId = new User("Lola", "000000"); // =toUpdate
-		newUserWithId.setUserId(savedUser.getUserId());
-		
-		Mockito.when(this.repo.save(newUserWithId)).thenReturn(newUserWithId);
-
-		assertEquals(newUserWithId, this.service.update(newUser, savedUser.getUserId()));
-
-		Mockito.verify(this.repo, Mockito.times(1)).findById(savedUser.getUserId());
-		Mockito.verify(this.repo, Mockito.times(1)).save(newUserWithId);
-	}
-
-	@Test
-	public void testDelete() {
-
-		Mockito.when(this.repo.existsById(USER_ID)).thenReturn(RESULT);
-		
-		assertEquals(RESULT, this.service.delete(USER_ID));
-		
-		Mockito.verify(this.repo, Mockito.times(1)).deleteById(USER_ID);
-		Mockito.verify(this.repo, Mockito.times(1)).existsById(USER_ID);
 	}
 }

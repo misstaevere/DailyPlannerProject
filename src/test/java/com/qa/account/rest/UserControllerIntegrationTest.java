@@ -1,8 +1,5 @@
 package com.qa.account.rest;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,46 +60,5 @@ public class UserControllerIntegrationTest {
 		ResultMatcher matchContent = MockMvcResultMatchers.content().json(this.mapper.writeValueAsString(savedUser));
 
 		this.mockMVC.perform(builder).andExpect(matchStatus).andExpect(matchContent);
-	}
-
-//	@Test // same as above
-//	public void testCreateBuilder() throws Exception {
-//		this.mockMVC.perform(post("/user/create")
-//				.contentType(MediaType.APPLICATION_JSON)
-//				.accept(MediaType.APPLICATION_JSON)
-//				.content(this.mapper.writeValueAsString(user))).andExpect(status().isCreated())
-//		.andExpect(MockMvcResultMatchers.content().json(this.mapper.writeValueAsString(savedUser)));
-//	}
-
-	@Test
-	public void testReadOneSuccess() throws Exception {
-		this.mockMVC
-				.perform(get("/user/read/" + this.savedUser.getUserId()).contentType(MediaType.APPLICATION_JSON)
-						.accept(MediaType.APPLICATION_JSON).content(this.mapper.writeValueAsString(user)))
-				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.content().json(this.mapper.writeValueAsString(savedUser)));
-	}
-
-	@Test
-	public void testReadOneFailure() throws Exception {
-		this.mockMVC
-				.perform(get("/user/read/999999").contentType(MediaType.APPLICATION_JSON)
-						.accept(MediaType.APPLICATION_JSON).content(this.mapper.writeValueAsString(user)))
-				.andExpect(status().isNotFound());
-	}
-
-	@Test
-	public void testRead() {
-
-	}
-
-	@Test
-	public void testUpdate() {
-
-	}
-
-	@Test
-	public void testDelete() {
-
 	}
 }
