@@ -1,18 +1,24 @@
 package com.qa.account.rest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.qa.account.dto.TaskDTO;
 import com.qa.account.persistence.domain.Task;
 import com.qa.account.persistence.repo.TaskRepo;
 
@@ -30,56 +37,53 @@ import com.qa.account.persistence.repo.TaskRepo;
 @AutoConfigureMockMvc // creates an object like Postman
 public class TaskControllerIntegrationTest {
 
-	@Autowired // will insert the obj in the class
-	private MockMvc mockMVC; // 3rd anatation will create this obj
-
-	private Task task;
-
-	private Task savedTask;
-
 	@Autowired
-	private ObjectMapper mapper; // used to convert java classes to and from json
+	private MockMvc mock;
 
 	@Autowired
 	private TaskRepo repo;
-	
+
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@Autowired
+	private ObjectMapper mapper;
+
+	private Task task;
 	private long taskId;
+	private Task savedTask;
+	private Task savedTaskWithID;
+	private TaskDTO taskDTO;
+
+	private TaskDTO mapToDTO(Task task) {
+		return this.modelMapper.map(task, TaskDTO.class);
+	}
 
 	@Before
 	public void init() {
 		this.repo.deleteAll();
-		
-		this.task = new Task(LocalDate.of(2020, 8, 30), LocalTime.of(7, 30), "sing", "shower");
-		this.savedTask = this.repo.save(this.task);
-		this.taskId = this.savedTask.getTaskId() + 1;
+		this.savedTask = new Task(LocalDate.of(2020, 8, 30), LocalTime.of(7, 30), "Make pancakes", "Kitchen");
+		this.savedTaskWithID = this.repo.save(this.savedTask);
+		this.taskId = this.savedTaskWithID.getTaskId();
+		this.taskDTO = this.mapToDTO(savedTaskWithID);
 	}
 
 	@Test
 	public void testCreate() throws Exception {
-		this.savedTask.setTaskId(taskId);
-		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.post("/task/create");
-		builder.contentType(MediaType.APPLICATION_JSON); // accepts Json and sends Json back
+		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.request(HttpMethod.POST, "/task/create");
+		builder.contentType(MediaType.APPLICATION_JSON);
+		builder.content(this.mapper.writeValueAsString(savedTask));
 		builder.accept(MediaType.APPLICATION_JSON);
-		builder.content(this.mapper.writeValueAsString(task));
 
 		ResultMatcher matchStatus = MockMvcResultMatchers.status().isCreated();
-		ResultMatcher matchContent = MockMvcResultMatchers.content().json(this.mapper.writeValueAsString(savedTask));
+		ResultMatcher matchContent = MockMvcResultMatchers.content().json(this.mapper.writeValueAsString(taskDTO));
+		this.mock.perform(builder).andExpect(matchStatus).andExpect(matchContent);
 
-		this.mockMVC.perform(builder).andExpect(matchStatus).andExpect(matchContent);
 	}
-
-//	@Test // same as above
-//	public void testCreateBuilder() throws Exception {
-//		this.mockMVC.perform(post("/task/create")
-//				.contentType(MediaType.APPLICATION_JSON)
-//				.accept(MediaType.APPLICATION_JSON)
-//				.content(this.mapper.writeValueAsString(task))).andExpect(status().isCreated())
-//		.andExpect(MockMvcResultMatchers.content().json(this.mapper.writeValueAsString(savedTask)));
-//	}
 
 	@Test
 	public void testReadOneSuccess() throws Exception {
-		this.mockMVC
+		this.mock
 				.perform(get("/task/read/" + this.savedTask.getTaskId()).contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON).content(this.mapper.writeValueAsString(task)))
 				.andExpect(status().isOk())
@@ -88,24 +92,40 @@ public class TaskControllerIntegrationTest {
 
 	@Test
 	public void testReadOneFailure() throws Exception {
-		this.mockMVC
+		this.mock
 				.perform(get("/task/read/999999").contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON).content(this.mapper.writeValueAsString(task)))
 				.andExpect(status().isNotFound());
 	}
 
 	@Test
-	public void testRead() {
-
+	public void testDelete() throws Exception {
+		this.mock.perform(request(HttpMethod.DELETE, "/task/delete/" + this.taskId)).andExpect(status().isNoContent());
 	}
 
 	@Test
-	public void testUpdate() {
+	public void testRead() throws Exception {
+		List<TaskDTO> taskList = new ArrayList<>();
+		taskList.add(this.taskDTO);
 
+		String content = this.mock.perform(request(HttpMethod.GET, "/task/read").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+		assertEquals(this.mapper.writeValueAsString(taskList), content);
 	}
 
 	@Test
-	public void testDelete() {
+	public void testUpdate() throws Exception {
+		Task newTask = new Task(LocalDate.of(2022, 8, 30), LocalTime.of(3, 30), "Dance", "Bar");
+		Task updatedTask = new Task(newTask.getTaskDate(), newTask.getTaskTime(), newTask.getTaskName(),
+				newTask.getTaskLocation());
+		updatedTask.setTaskId(this.taskId);
 
+		String result = this.mock
+				.perform(request(HttpMethod.PUT, "/task/update/?id=" + this.taskId).accept(MediaType.APPLICATION_JSON)
+						.contentType(MediaType.APPLICATION_JSON).content(this.mapper.writeValueAsString(newTask)))
+				.andExpect(status().isAccepted()).andReturn().getResponse().getContentAsString();
+
+		assertEquals(this.mapper.writeValueAsString(this.mapToDTO(updatedTask)), result);
 	}
 }

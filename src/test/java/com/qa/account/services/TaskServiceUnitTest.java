@@ -3,6 +3,8 @@ package com.qa.account.services;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,7 +17,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 
@@ -24,10 +25,10 @@ import com.qa.account.persistence.domain.Task;
 import com.qa.account.persistence.repo.TaskRepo;
 import com.qa.account.service.TaskService;
 
-@RunWith(MockitoJUnitRunner.class) // this class will only run with mockito library, not the whole spring app
+@RunWith(MockitoJUnitRunner.class)
 public class TaskServiceUnitTest {
 
-	@InjectMocks // (= new TaskService(repo))
+	@InjectMocks
 	private TaskService service;
 
 	@Mock
@@ -36,21 +37,17 @@ public class TaskServiceUnitTest {
 	@Mock
 	private ModelMapper mapper;
 
-	final long TASK_ID = 1L;
-
-	private TaskDTO taskDTO;
-
-	private Task savedTaskWithID;
-
-	private Task savedTask;
-
 	private List<Task> taskList;
+	private Task savedTask;
+	private Task savedTaskWithID;
+	private TaskDTO taskDTO;
+	final long TASK_ID = 1L;
 
 	@Before
 	public void init() {
 		this.taskList = new ArrayList<>();
 		this.taskList.add(savedTask);
-		this.savedTask = new Task(LocalDate.of(2020, 7, 10), LocalTime.of(12, 10), "Workout", "Gym");
+		this.savedTask = new Task(LocalDate.of(2020, 10, 13), LocalTime.of(10, 10), "My birthday", "Bali");
 		this.savedTaskWithID = new Task(savedTask.getTaskDate(), savedTask.getTaskTime(), savedTask.getTaskName(),
 				savedTask.getTaskLocation());
 		this.savedTaskWithID.setTaskId(TASK_ID);
@@ -58,55 +55,56 @@ public class TaskServiceUnitTest {
 	}
 
 	@Test
-	public void testCreate() {
-		Mockito.when(this.repo.save(savedTask)).thenReturn(savedTaskWithID);
-		Mockito.when(this.mapper.map(savedTaskWithID, TaskDTO.class)).thenReturn(taskDTO);
+	public void createTest() {
+		when(this.repo.save(savedTask)).thenReturn(savedTaskWithID);
+		when(this.mapper.map(savedTaskWithID, TaskDTO.class)).thenReturn(taskDTO);
 		assertEquals(this.taskDTO, this.service.create(savedTask));
-		Mockito.verify(this.repo, Mockito.times(1)).save(this.savedTask);
+		verify(this.repo, times(1)).save(this.savedTask);
 	}
 
 	@Test
-	public void testRead() {
-		Mockito.when(repo.findAll()).thenReturn(this.taskList);
-		Mockito.when(this.mapper.map(savedTaskWithID, TaskDTO.class)).thenReturn(taskDTO);
-		assertFalse("No tasks here", this.service.read().isEmpty());
-		Mockito.verify(repo, times(1)).findAll();
+	public void deleteTest() {
+		when(this.repo.existsById(TASK_ID)).thenReturn(true, false);
+		this.service.delete(TASK_ID);
+
+		verify(this.repo, times(1)).deleteById(TASK_ID);
+		verify(this.repo, times(2)).existsById(TASK_ID);
 	}
 
 	@Test
-	public void testReadId() {
-		Mockito.when(this.repo.findById(this.TASK_ID)).thenReturn(Optional.of(this.savedTaskWithID));
-		Mockito.when(this.mapper.map(savedTaskWithID, TaskDTO.class)).thenReturn(taskDTO);
+	public void readIdTest() {
+		when(this.repo.findById(this.TASK_ID)).thenReturn(Optional.of(this.savedTaskWithID));
+		when(this.mapper.map(savedTaskWithID, TaskDTO.class)).thenReturn(taskDTO);
 
 		assertEquals(this.taskDTO, this.service.readId(this.TASK_ID));
 
-		Mockito.verify(this.repo, times(1)).findById(this.TASK_ID);		
+		verify(this.repo, times(1)).findById(this.TASK_ID);
 	}
 
 	@Test
-	public void testUpdate() {
-		Mockito.when(this.repo.findById(savedTask.getTaskId())).thenReturn(Optional.of(savedTask));
+	public void readTest() {
 
-		Task newTask = new Task(LocalDate.of(2020, 7, 1), LocalTime.of(12, 00), "swim", "pool"); // Task task
-		Task newTaskWithId = new Task(LocalDate.of(2020, 7, 1), LocalTime.of(12, 00), "swim", "pool"); // =toUpdate
-		newTaskWithId.setTaskId(savedTask.getTaskId());
+		when(repo.findAll()).thenReturn(this.taskList);
+		when(this.mapper.map(savedTaskWithID, TaskDTO.class)).thenReturn(taskDTO);
 
-		Mockito.when(this.repo.save(newTaskWithId)).thenReturn(newTaskWithId);
+		assertFalse("No tasks were found", this.service.read().isEmpty());
 
-		assertEquals(newTaskWithId, this.service.update(newTask, savedTask.getTaskId()));
-
-		Mockito.verify(this.repo, Mockito.times(1)).findById(savedTask.getTaskId());
-		Mockito.verify(this.repo, Mockito.times(1)).save(newTaskWithId);
+		verify(repo, times(1)).findAll();
 	}
 
 	@Test
-	public void testDelete() {
+	public void updateTest() {
 
-		Mockito.when(this.repo.existsById(TASK_ID)).thenReturn(true, false);
-
-		this.service.delete(TASK_ID);
-
-		Mockito.verify(this.repo, Mockito.times(1)).deleteById(TASK_ID);
-		Mockito.verify(this.repo, Mockito.times(1)).existsById(TASK_ID);
+		Task newTask = new Task(LocalDate.of(2020, 12, 25), LocalTime.of(1, 10), "Christmas", "Australia");
+		Task updatedTask = new Task(newTask.getTaskDate(), newTask.getTaskTime(), newTask.getTaskName(),
+				newTask.getTaskLocation());
+		updatedTask.setTaskId(1L);
+		TaskDTO newDTO = new ModelMapper().map(updatedTask, TaskDTO.class);
+		when(this.repo.findById(this.TASK_ID)).thenReturn(Optional.of(savedTask));
+		when(this.mapper.map(updatedTask, TaskDTO.class)).thenReturn(newDTO);
+		when(this.repo.save(updatedTask)).thenReturn(updatedTask);
+		assertEquals(updatedTask, this.service.update(newTask, this.TASK_ID));
+		verify(this.repo, times(1)).findById(1L);
+		verify(this.repo, times(1)).save(updatedTask);
 	}
 }

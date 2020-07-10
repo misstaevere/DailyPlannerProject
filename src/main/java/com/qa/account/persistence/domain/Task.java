@@ -44,45 +44,6 @@ public class Task {
 	public Task() { // entities must have a default constructor
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Task other = (Task) obj;
-		if (taskDate == null) {
-			if (other.taskDate != null)
-				return false;
-		} else if (!taskDate.equals(other.taskDate))
-			return false;
-		if (taskId != other.taskId)
-			return false;
-		if (taskLocation == null) {
-			if (other.taskLocation != null)
-				return false;
-		} else if (!taskLocation.equals(other.taskLocation))
-			return false;
-		if (taskName == null) {
-			if (other.taskName != null)
-				return false;
-		} else if (!taskName.equals(other.taskName))
-			return false;
-		if (taskTime == null) {
-			if (other.taskTime != null)
-				return false;
-		} else if (!taskTime.equals(other.taskTime))
-			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
-		return true;
-	}
-
 	public Long getTaskId() {
 		return taskId;
 	}

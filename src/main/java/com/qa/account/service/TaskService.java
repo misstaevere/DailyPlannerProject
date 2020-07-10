@@ -37,7 +37,7 @@ public class TaskService {
 		return this.mapper.mapToDTO(this.repo.findById(taskId).orElseThrow(TaskNotFoundException::new));
 	}
 
-	public Task update(Task task, Long taskId) {
+	public TaskDTO update(Task task, Long taskId) {
 		Task toUpdate = this.repo.findById(taskId).orElseThrow(() -> new TaskNotFoundException());
 
 		toUpdate.setTaskDate(task.getTaskDate());
@@ -45,7 +45,7 @@ public class TaskService {
 		toUpdate.setTaskName(task.getTaskName());
 		toUpdate.setTaskLocation(task.getTaskLocation());
 
-		return this.repo.save(toUpdate);
+		return this.mapper.mapToDTO(this.repo.save(toUpdate));
 	}
 
 	public boolean delete(Long taskId) {

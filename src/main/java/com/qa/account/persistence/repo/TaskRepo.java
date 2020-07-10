@@ -9,7 +9,5 @@ import com.qa.account.persistence.domain.Task;
 // SELECT *FROM tbl; it rebuilds these from each class itself so we don't have to repeat the code
 @Repository
 public interface TaskRepo extends JpaRepository<Task, Long> {
-	
-	// List<Task> findByLocation(String taskLocation);
 
 }

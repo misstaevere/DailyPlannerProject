@@ -1,0 +1,62 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="../CSS/planner.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">My Project</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Sign-In Page <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="planner.html">Daily Planner</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div>
+        <h1>CREATE A NEW TASK</h1>
+        <form id="myForm">
+            <label for="task_name">Task name: </label><br />
+            <input name="taskName" id="task_name" type="text" placeholder="enter task name" />
+            <br />
+
+            <label for="task_date">Date: </label><br />
+            <input name="taskDate" id="task_date" type="date" placeholder="enter date" />
+            <br />
+
+            <label for="task_time">Time: </label><br />
+            <input name="taskTime" id="task_time" type="time" placeholder="enter time" />
+            <br />
+
+            <label for="task_location">Location: </label><br />
+            <input name="taskLocation" id="task_location" type="text" placeholder="enter location" />
+            <br />
+            <button id="createTask">Add to calendar</button>
+        </form>
+    </div>
+
+    <div>
+        <h3 for="viewTask">View all tasks: </h3><br />
+        <button id="getTask" onclick="axiosDataElements();">Click to view</button>
+        <pre id="output"></pre>
+        <div id="bigOutput"></div> <!-- used for getDataElements -->
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
+    <script src="../JS/planner.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+body > div > input {
+    display: block;
+}
+
+body > div {
+    border: 7px solid #5f6366;
+    color: #5f6366;
+    padding: 5px;
+    margin-bottom: 2%;
+}

@@ -48,9 +48,6 @@ public class TaskController {
 	public ResponseEntity<TaskDTO> readOne(@PathVariable Long taskId) {
 		return ResponseEntity.ok(this.service.readId(taskId));
 	}
-//	public ResponseEntity<Task> readOne(@PathVariable Long taskId) {
-//		return ResponseEntity.ok(this.service.readId(taskId));
-//	}
 
 	@PutMapping("/update/{taskId}")
 	public ResponseEntity<TaskDTO> update(@PathVariable Long taskId, @RequestBody Task task) {
