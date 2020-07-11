@@ -26,8 +26,7 @@ public class TaskController {
 
 	private TaskService service;
 
-	@Autowired // process where Spring goes and finds the bean with the correct type
-				// (taskservice)
+	@Autowired // process where Spring goes and finds the bean with the correct type (taskservice)
 	public TaskController(TaskService service) { // creating a new taskservice throwing a taskservice bean into it
 		super();
 		this.service = service;

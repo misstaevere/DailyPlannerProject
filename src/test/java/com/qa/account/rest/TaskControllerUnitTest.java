@@ -91,12 +91,9 @@ public class TaskControllerUnitTest {
 		Task newTask = new Task(LocalDate.of(2020, 7, 1), LocalTime.of(12, 00), "swim", "pool");
 		Task updatedTask = new Task(LocalDate.of(2020, 7, 1), LocalTime.of(12, 00), "swim", "pool");
 		updatedTask.setTaskId(this.TASK_ID);
-
 		when(this.service.update(newTask, this.TASK_ID)).thenReturn(this.mapToDTO(updatedTask));
-
 		assertEquals(new ResponseEntity<TaskDTO>(this.mapToDTO(updatedTask), HttpStatus.ACCEPTED),
 				this.controller.update(this.TASK_ID, newTask));
-
 		verify(this.service, times(1)).update(newTask, this.TASK_ID);
 	}
 }

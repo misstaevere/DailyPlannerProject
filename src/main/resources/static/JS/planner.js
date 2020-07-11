@@ -8,11 +8,6 @@ const params = new URLSearchParams(window.location.search);
 console.log('id: ', params.get('taskId'));
 
 (function () {
-    // document.getElementById('createTask').addEventListener('click', function () { // prints a list of items as they are typed in
-    //     const newDiv = document.createElement('div');
-    //     document.getElementById('output').appendChild(newDiv);
-    // newDiv.innerText = document.getElementById('taskDate').value + ' ' + document.getElementById('taskTime').value + ' ' + document.getElementById('taskName').value + ' ' + document.getElementById('taskLocation').value;
-
     // CREATE
     document.getElementById('myForm').addEventListener('submit', function (event) {
         event.preventDefault(); // prevents refresh/redirect when the createTask object runs
@@ -28,33 +23,6 @@ console.log('id: ', params.get('taskId'));
     });
 
 })();
-
-// XMLHttpRequest
-// function getData() {
-//     request.open('GET', 'http://localhost:8082/task/getAll');
-
-//     request.onload = function () {
-//         console.log(this);
-//         document.getElementById('output').innerText = this.responseText;
-//     }
-
-//     request.send();
-// }
-
-// FETCH
-// function getData() {
-//     fetch('http://localhost:8082/task/getAll')
-//     .then(res => res.json()) // always need tis line to convert to JSON format
-//     .then(json => output.innerText = JSON.stringify(json, undefined, 2))
-//     .catch(err => console.log(err));
-// }
-
-// AXIOS
-// function getData() {
-//     axios.get(URL + '/read')
-//         .then(res => output.innerText = JSON.stringify(res.data, undefined, 2))
-//         .catch(err => console.log(err));
-// }
 
 // READ
 function makeElement(eleType, text, appendTo, className) {
