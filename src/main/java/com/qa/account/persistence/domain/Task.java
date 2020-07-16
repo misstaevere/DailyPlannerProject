@@ -98,4 +98,56 @@ public class Task {
 				+ ", taskLocation=" + taskLocation + ", user=" + user + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((taskDate == null) ? 0 : taskDate.hashCode());
+		result = prime * result + (int) (taskId ^ (taskId >>> 32));
+		result = prime * result + ((taskLocation == null) ? 0 : taskLocation.hashCode());
+		result = prime * result + ((taskName == null) ? 0 : taskName.hashCode());
+		result = prime * result + ((taskTime == null) ? 0 : taskTime.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Task other = (Task) obj;
+		if (taskDate == null) {
+			if (other.taskDate != null)
+				return false;
+		} else if (!taskDate.equals(other.taskDate))
+			return false;
+		if (taskId != other.taskId)
+			return false;
+		if (taskLocation == null) {
+			if (other.taskLocation != null)
+				return false;
+		} else if (!taskLocation.equals(other.taskLocation))
+			return false;
+		if (taskName == null) {
+			if (other.taskName != null)
+				return false;
+		} else if (!taskName.equals(other.taskName))
+			return false;
+		if (taskTime == null) {
+			if (other.taskTime != null)
+				return false;
+		} else if (!taskTime.equals(other.taskTime))
+			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
+		return true;
+	}
+
 }

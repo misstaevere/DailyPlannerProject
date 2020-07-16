@@ -1,6 +1,7 @@
 package com.qa.account.service;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.qa.account.dto.UserDTO;
@@ -11,20 +12,16 @@ import com.qa.account.persistence.repo.UserRepo;
 public class UserService {
 
 	private UserRepo repo;
-	private ModelMapper mapper;
+	private Mapper<User, UserDTO> mapper;
 
+	@Autowired
 	public UserService(UserRepo repo, ModelMapper mapper) {
 		super();
 		this.repo = repo;
-		this.mapper = mapper;
-	}
-
-	private UserDTO mapToDTO(User saved) {
-		return this.mapper.map(saved, UserDTO.class);
+		this.mapper = (User user) -> mapper.map(user, UserDTO.class);
 	}
 
 	public UserDTO create(User user) {
-		User saved = this.repo.save(user);
-		return this.mapToDTO(saved);
+		return this.mapper.mapToDTO(this.repo.save(user));
 	}
 }

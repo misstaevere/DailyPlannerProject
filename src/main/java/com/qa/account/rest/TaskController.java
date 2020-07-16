@@ -50,7 +50,7 @@ public class TaskController {
 
 	@PutMapping("/update/{taskId}")
 	public ResponseEntity<TaskDTO> update(@PathVariable Long taskId, @RequestBody Task task) {
-		return new ResponseEntity<TaskDTO>(HttpStatus.ACCEPTED);
+		return new ResponseEntity<TaskDTO>(this.service.update(task,  taskId), HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/delete/{taskId}")

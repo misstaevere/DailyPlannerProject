@@ -41,7 +41,7 @@ public class TaskServiceUnitTest {
 	private Task savedTask;
 	private Task savedTaskWithID;
 	private TaskDTO taskDTO;
-	final long TASK_ID = 1L;
+	private long TASK_ID = 1L;
 
 	@Before
 	public void init() {
@@ -85,7 +85,6 @@ public class TaskServiceUnitTest {
 	public void readTest() {
 
 		when(repo.findAll()).thenReturn(this.taskList);
-		when(this.mapper.map(savedTaskWithID, TaskDTO.class)).thenReturn(taskDTO);
 
 		assertFalse("No tasks were found", this.service.read().isEmpty());
 
@@ -100,11 +99,14 @@ public class TaskServiceUnitTest {
 				newTask.getTaskLocation());
 		updatedTask.setTaskId(1L);
 		TaskDTO newDTO = new ModelMapper().map(updatedTask, TaskDTO.class);
-		when(this.repo.findById(this.TASK_ID)).thenReturn(Optional.of(savedTask));
+
+		when(this.repo.findById(this.TASK_ID)).thenReturn(Optional.of(savedTaskWithID));
+
 		when(this.mapper.map(updatedTask, TaskDTO.class)).thenReturn(newDTO);
 		when(this.repo.save(updatedTask)).thenReturn(updatedTask);
-		assertEquals(updatedTask, this.service.update(newTask, this.TASK_ID));
+		assertEquals(newDTO, this.service.update(newTask, this.TASK_ID));
 		verify(this.repo, times(1)).findById(1L);
 		verify(this.repo, times(1)).save(updatedTask);
+
 	}
 }

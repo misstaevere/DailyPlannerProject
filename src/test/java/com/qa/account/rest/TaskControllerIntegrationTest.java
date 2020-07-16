@@ -3,6 +3,7 @@ package com.qa.account.rest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
@@ -86,8 +87,7 @@ public class TaskControllerIntegrationTest {
 		this.mock
 				.perform(get("/task/read/" + this.savedTask.getTaskId()).contentType(MediaType.APPLICATION_JSON)
 						.accept(MediaType.APPLICATION_JSON).content(this.mapper.writeValueAsString(task)))
-				.andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.content().json(this.mapper.writeValueAsString(savedTask)));
+				.andExpect(status().isOk()).andExpect(content().json(this.mapper.writeValueAsString(taskDTO)));
 	}
 
 	@Test
@@ -119,10 +119,10 @@ public class TaskControllerIntegrationTest {
 		Task newTask = new Task(LocalDate.of(2022, 8, 30), LocalTime.of(3, 30), "Dance", "Bar");
 		Task updatedTask = new Task(newTask.getTaskDate(), newTask.getTaskTime(), newTask.getTaskName(),
 				newTask.getTaskLocation());
-		updatedTask.setTaskId(this.taskId);
+		updatedTask.setTaskId(taskId);
 
 		String result = this.mock
-				.perform(request(HttpMethod.PUT, "/task/update/?id=" + this.taskId).accept(MediaType.APPLICATION_JSON)
+				.perform(request(HttpMethod.PUT, "/task/update/" + this.taskId).accept(MediaType.APPLICATION_JSON)
 						.contentType(MediaType.APPLICATION_JSON).content(this.mapper.writeValueAsString(newTask)))
 				.andExpect(status().isAccepted()).andReturn().getResponse().getContentAsString();
 
