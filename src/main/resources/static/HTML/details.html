@@ -1,0 +1,45 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="../CSS/planner.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+
+<body>
+        <div id="bigOutput"></div> <!-- used for getDataElements -->
+
+        <div>
+            <form id="editForm">
+                <h3 for="editTasks">Make changes: </h3><br />
+                <label for="edit_name">New name: </label><br />
+                <input name="editName" id="edit_name" type="text" placeholder="enter new name" />
+                <br />
+
+                <label for="edit_date">New date: </label><br />
+                <input name="editDate" id="edit_date" type="date" placeholder="enter new date" />
+                <br />
+
+                <label for="edit_time">New time: </label><br />
+                <input name="editTime" id="edit_time" type="time" placeholder="enter new time" />
+                <br />
+
+                <label for="edit_location">New location: </label><br />
+                <input name="editLocation" id="edit_location" type="text" placeholder="enter new location" />
+                <br />
+                <button id="editTask">Edit task</button>
+            </form>
+        </div>
+
+        <div>
+            <h3 for="delete">Delete: </h3><br />
+            <input id="delete_input" />
+            <button id="delete_button">Delete task</button><br />
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
+    <script src="../JS/details.js"></script>
+</body>
+
+</html>
