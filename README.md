@@ -1,3 +1,4 @@
+Coverage: 54.8%
 ### Practical Project Specification: Hobby Web Application (HWA)
 
 The application is a Daily Planner where a user is able to: 
@@ -23,6 +24,11 @@ The application is a Daily Planner where a user is able to:
 
 Finally I have a running, working and tested application which takes in user input and can create, read, update and delete tasks in the Daily Planner. 
 
+### API Documentation
+
+Can be found here:
+http://localhost:8181/swagger-ui.html
+
 ### Prerequisites
 
 ```
@@ -45,7 +51,13 @@ Test Reporting: Surefire
 git clone git@github.com:misstaevere/DailyPlannerProject.git
 cd DailyPlannerProject/
 mvn package
-java -jar Kat-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+java -jar DPP-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+```
+
+## Deployment
+```
+Run the Spring Application
+Go to http://localhost:8181
 ```
 
 ## Authors

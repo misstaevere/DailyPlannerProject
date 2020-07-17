@@ -20,7 +20,7 @@ public class SeleniumTest {
 
 	@Before
 	public void init() {
-		ChromeOptions opts = new ChromeOptions();
+		ChromeOptions opts = new ChromeOptions(); 
 		opts.setHeadless(true);
 		this.driver = new ChromeDriver(opts);
 //		this.driver.manage().window().maximize();
@@ -53,7 +53,6 @@ public class SeleniumTest {
 		WebElement submit = this.driver.findElementByXPath("//*[@id=\"createUser\"]");
 		submit.click();
 
-		Thread.sleep(2000);
 		assertEquals("http://localhost:8181/HTML/planner.html", this.driver.getCurrentUrl());
 
 // CREATE A TASK
@@ -71,8 +70,6 @@ public class SeleniumTest {
 		WebElement addToCal = this.driver.findElementByXPath("//*[@id=\"createTask\"]");
 		addToCal.click();
 
-		Thread.sleep(2000);
-
 // ACCEPT ALERT
 		WebDriverWait wait = new WebDriverWait(driver, 2);
 		wait.until(ExpectedConditions.alertIsPresent());
@@ -86,15 +83,12 @@ public class SeleniumTest {
 		Thread.sleep(2000);
 
 		assertTrue(this.driver.findElementByXPath("//*[@id=\"bigOutput\"]/div").isDisplayed());
-		Thread.sleep(2000);
 
 // CLICK ON TASK
 		WebElement clickTask = this.driver.findElementByXPath("//*[@id=\"bigOutput\"]/div");
 		clickTask.click();
-		Thread.sleep(2000);
 
 		assertTrue(this.driver.getCurrentUrl().contains("details"));
-		Thread.sleep(2000);
 
 // UPDATE TASK
 		WebElement newName = this.driver.findElementByXPath("//*[@id=\"edit_name\"]");
@@ -109,8 +103,6 @@ public class SeleniumTest {
 		WebElement updateTaskBUtton = this.driver.findElementByXPath("//*[@id=\"editTask\"]");
 		updateTaskBUtton.click();
 
-		Thread.sleep(2000);
-
 // ACCEPT ALERT
 		WebDriverWait waitUpdate = new WebDriverWait(driver, 2);
 		waitUpdate.until(ExpectedConditions.alertIsPresent());
@@ -120,7 +112,6 @@ public class SeleniumTest {
 // REFRESH
 		driver.navigate().to(driver.getCurrentUrl());
 		driver.navigate().refresh();
-		Thread.sleep(2000);
 
 // GET ID
 		String id = this.driver.getCurrentUrl().substring(this.driver.getCurrentUrl().length() - 1);
@@ -141,10 +132,8 @@ public class SeleniumTest {
 // REFRESH
 		driver.navigate().to(driver.getCurrentUrl());
 		driver.navigate().refresh();
-		Thread.sleep(2000);
 
 		assertTrue(this.driver.findElementByXPath("//*[@id=\"bigOutput\"]").isDisplayed());
-		Thread.sleep(2000);
 
 	}
 
